@@ -1,0 +1,23 @@
+version: 1
+
+transform:
+  # This is a test that uses an anonymous class that injects the Container.
+  # Once you have the container, you can grab interesting things, like the
+  # evaluator.
+  - name: eval_ruby
+    code: |
+      Class.new do
+        attr_accessor :container
+
+        def self.needs
+          :container
+        end
+
+        def initialize(container:)
+          @container = container
+        end
+
+        def call(obj)
+          obj.to_s.gsub(/\bX/, 'Y')
+        end
+      end

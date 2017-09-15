@@ -1,0 +1,40 @@
+version: 1
+
+# This uses the state of the printer to conditionally transform.  It only marks
+# lines where the printer position in X is greater than 100.
+#
+# Commands are evaluated at the end of the pipeline.  So when you query the
+# position, you're actually seeing the position after the *previous* command,
+# not after evaluating the current command.
+transform:
+
+  - name: eval_ruby
+    code: |
+      Class.new do
+
+        # Request that the evaluator be injected.
+        def self.needs
+          :evaluator
+        end
+
+        # This is the constructor of the class.  The evaluator is given as a
+        # keyword argument.
+        def initialize(evaluator:)
+          @evaluator = evaluator
+        end
+
+        # This is called for every line of G-code.  You should return what you
+        # want the line to be.
+        def call(line)
+          # Ignore nil.
+          return line unless line
+
+          if @evaluator.position[:X] > 100
+            return "#{line} ; right of 100"
+          end
+
+          # In all other cases, just return the unmodified line.
+          line
+        end
+
+      end

@@ -1,0 +1,50 @@
+#!/usr/bin/env ruby
+require_relative '../lib/gcode_vm/cli/environment_setup'
+require 'optparse'
+require_relative '../lib/gcode_vm'
+require_relative '../lib/gcode_vm/cli'
+require_relative '../lib/gcode_vm/cli/cli_prompt_enumerator'
+
+options = {}
+parser = OptionParser.new do |opts|
+  opts.banner = "Usage: #{File.basename(__FILE__)} [options] [file]"
+  opts.separator('')
+  opts.on('-l', '--list', "List transforms and exit") do |list|
+    options[:list] = list
+  end
+  opts.on('-p', '--parse-transform', "Parse the transform file, print it, and exit") do |parse_transform|
+    options[:parse_transform] = parse_transform
+  end
+  opts.separator('')
+  opts.on('-f', '--format FORMAT', "Format of input, either gcode or a custom format") do |format|
+    options[:format] = format
+  end
+  opts.on('-t', '--transform FILE', "Transform config in YAML format.  See examples/demo.yml") do |file|
+    options[:transform_file] = file
+  end
+  opts.on('--[no-]unsafe', "Allow unsafe eval of code in transform file") do |unsafe|
+    options[:unsafe] = unsafe
+  end
+  opts.on('--machine-type TYPE', "Machine type: acs or aerotech (default: aerotech)") do |type|
+    options[:machine_type] = type
+  end
+  opts.on('-q', '--quiet', "Non-interactive quiet mode (no prompt)") do |quiet|
+    options[:quiet] = quiet
+  end
+  opts.on('--[no-]verbose', "Verbose printing") do |verbose|
+    options[:verbose] = verbose
+  end
+  opts.on('-h', '--help', "Prints this help message") do
+    puts opts
+    exit
+  end
+end
+
+rest_args = parser.parse(ARGV)
+
+if rest_args.present?
+  options[:filename] = rest_args[0]
+end
+
+enum = options[:quiet] ? $stdin.each_line : GcodeVm::CliPromptEnumerator.new
+GcodeVm::Cli.new(**options).main(read_stdin: true, stdin_enum: enum)

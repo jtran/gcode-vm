@@ -1,0 +1,6 @@
+version: 1
+
+transform:
+  - name: axis_scale
+    axis: F
+    multiplier: 1.5

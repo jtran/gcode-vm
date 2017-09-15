@@ -1,0 +1,6 @@
+version: 1
+
+transform:
+  - name: extrusion_multiplier
+    axis: b
+    multiplier: 2.0

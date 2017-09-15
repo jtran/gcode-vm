@@ -1,0 +1,182 @@
+# Versioning your transform file will allow it to continue working after
+# breaking changes are made.
+version: 1
+
+transform:
+  ########################################################################
+  # String Operations
+
+  # Allow this to work on Windows files with CRLF line endings.
+  - name: chomp
+    separator: "\r\n"
+
+  # Use another chomp, this time with the default args, which will use the
+  # current system's line endings.
+  - chomp
+
+  # Replace "A" param with a number after it, with "B" param.
+  - name: replace
+    pattern: /\bA(\d+)/
+    with: B\1
+
+  ########################################################################
+  # Stream Operations
+
+  # Strip comment lines.  Elements matching the pattern are removed from the
+  # stream completely.
+  - name: reject
+    if: /\A\s*;/
+
+  # Remove the first layer entirely.
+  - name: reject
+    if: /Layer number 1\b/ ... /Layer number 2\b/
+
+  # Split lines with a pipe character into multiple lines (just for fun).  This
+  # potentially creates multiple elements in the stream for each input element.
+  - name: split
+    pattern: /\|/
+
+  # Insert text as new items in the stream.  Each line is its own element.
+  - name: insert
+    text: |
+      G28 X
+      G92 b0 c0
+    before: /\A\s*;\s*preamble/i
+    # Line separator used to split text.  Defaults to current system line
+    # endings.
+    line_separator: "\n"
+    # Set to true to insert everywhere, not just once.
+    global: false
+
+  # You can also insert *after* a pattern.
+  - name: insert
+    text: |
+      ; About to retract...
+      G4 P1
+    after: /\A\s*;\s*retract/i
+
+  ########################################################################
+  # Printer Operations
+
+  # Multiply all extrusions on the E axis by 2.
+  - name: extrusion_multiplier
+    axis: E
+    multiplier: 2.0
+
+  # Split 25% of b-axis extrusion off to the c-axis, leaving the remainging 75%
+  # of the original extrusion on the b-axis.  This preserves the total amount of
+  # extrusion in a given command.
+  - name: split_extrusion_between_axes
+    weight: 0.25
+    from_axis: b
+    to_axis: c
+
+  # Split long moves into shorter moves.  Split X, Y, b, and c, but only use X
+  # and Y to count towards the length of a given move.
+  - name: split_move
+    max_distance: 10.0
+    axes:
+      - X
+      - Y
+      - b
+      - c
+    # Defaults to axes if not specified.
+    distance_axes:
+      - X
+      - Y
+
+  # Multiply axis value by a factor, regardless of absolute or relative mode.
+  - name: axis_scale
+    axis: F
+    multiplier: 1.5
+
+  # Multiply axis value by another factor, only if the line matches a pattern.
+  - name: axis_scale
+    axis: F
+    multiplier: 1.5
+    if: /\bspecial fast/i
+
+  # Multiply axis value by another factor, unless the line matches a pattern.
+  - name: axis_scale
+    axis: F
+    multiplier: 0.75
+    unless: /\bE/
+
+  # Fill in the current feedrate on every line that it isn't specified.
+  - name: fill_position
+    axis: F
+
+  # Multiply all extrusions on the E axis by 2, but only on layer 2.
+  - name: extrusion_multiplier
+    axis: E
+    multiplier: 2.0
+    if: /Layer number 2\b/ ... /Layer number 3\b/
+
+  # Multiply all extrusions on the E axis by 2, but only when extruding.  Ranges
+  # will repeat their match, if possible.  This allows you to do something in
+  # between all "begin" and "end" lines.
+  - name: extrusion_multiplier
+    axis: E
+    multiplier: 2.0
+    if: /Extrusion Preamble/ ... /Extrusion Postamble/
+
+  # Multiply all extrusions on the E axis by 2, but only from layer number 2 on.
+  # You can make open-ended ranges by omitting one side of the range.  This
+  # allows you to express "everything before a pattern" or "everything after a
+  # pattern".
+  - name: extrusion_multiplier
+    axis: E
+    multiplier: 2.0
+    if: /Layer number 2\b/ ...
+
+  # Multiply all extrusions on the b axis by 2, on every Z movement up to the
+  # next extrusion, but only two lines if the Z movement happens within an
+  # extrusion.  The point is that you can nest ranges.  You *must* use
+  # parentheses to indicate the associativity.
+  - name: extrusion_multiplier
+    axis: b
+    multiplier: 2.0
+    if: /G[0123]\b[^Z]+\bZ\d/ ... (/Extrusion Preamble/ ... /Extrusion Postamble/)
+
+  # Insert text at the start of every infill block, assuming infill lines are
+  # marked with a comment.
+  - name: insert
+    text: |
+      ; Starting infill here.
+    before: changing_to /infill/
+    global: true
+
+  # Insert text at the end of every infill block, assuming infill lines are
+  # marked with a comment.
+  - name: insert
+    text: |
+      ; Ending infill here.
+    before: changing_from /infill/
+    global: true
+
+  # Any transform can have an ID so that you can modify it on-the-fly.  The ID
+  # should only contain letters, numbers, underscore, and hyphen, and must not
+  # start with a number.  See the "set" command in aerotech_streamer.
+  - name: split_extrusion_between_axes
+    id: bc_split
+    weight: 0.25
+    from_axis: b
+    to_axis: c
+
+  # Add an amount to the Z axis.
+  - name: axis_translate
+    axis: Z
+    amount: 1.0
+
+  # Change from using B axis to D axis.
+  - name: rename_axis
+    from: B
+    to: D
+
+  # Convert absolute values to relative values on the b axis.
+  - name: convert_to_relative
+    axis: b
+
+  # Convert relative values to absolute values on the b axis.
+  - name: convert_to_absolute
+    axis: b

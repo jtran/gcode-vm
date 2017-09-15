@@ -1,0 +1,8 @@
+# Ignore bundler config.
+/.bundle
+
+# Ignore Byebug command history file.
+.byebug_history
+
+# OS-specific files.
+.DS_Store
