@@ -7,10 +7,10 @@ Gem::Specification.new do |spec|
   spec.name          = "gcode-vm"
   spec.version       = GcodeVm::VERSION
   spec.authors       = ["Jonathan Tran"]
-  spec.email         = ["jon@voxel8.com"]
+  spec.email         = ["jonnytran@gmail.com"]
 
   spec.summary       = %q{G-code virtual machine and post-processing DSL}
-  spec.homepage      = "https://github.com/Voxel8/gcode-vm"
+  spec.homepage      = "https://github.com/jtran/gcode-vm"
   spec.license       = 'MIT'
 
   spec.files         = `git ls-files -z`.split("\x0").reject do |f|

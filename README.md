@@ -11,7 +11,7 @@ A G-code virtual machine and post-processing DSL.
 To use this gem, include it in your Gemfile.
 
 ```ruby
-gem 'gcode-vm', git: 'git@github.com:Voxel8/gcode-vm.git'
+gem 'gcode-vm', git: 'git@github.com:jtran/gcode-vm.git'
 ```
 
 Then install it.
