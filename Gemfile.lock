@@ -19,7 +19,7 @@ GEM
       concurrent-ruby (~> 1.0)
     minitest (5.11.3)
     parslet (2.0.0)
-    rake (12.3.3)
+    rake (13.0.3)
     tzinfo (2.0.4)
       concurrent-ruby (~> 1.0)
     zeitwerk (2.4.2)
@@ -31,7 +31,7 @@ DEPENDENCIES
   bundler (~> 2.0)
   gcode-vm!
   minitest (~> 5.11.3)
-  rake (~> 12.0)
+  rake (~> 13.0)
 
 BUNDLED WITH
    2.2.3
