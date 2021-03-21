@@ -24,5 +24,5 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "parslet", ">= 1.8", "< 3"
   spec.add_development_dependency "bundler", "~> 2.0"
   spec.add_development_dependency "rake", "~> 13.0"
-  spec.add_development_dependency "minitest", "~> 5.11.3"
+  spec.add_development_dependency "minitest", "~> 5.14.4"
 end
