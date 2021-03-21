@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    gcode-vm (1.0.0)
+    gcode-vm (1.0.1)
       activesupport (>= 5.1, < 7)
       parslet (>= 1.8, < 3)
 
