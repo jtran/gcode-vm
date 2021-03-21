@@ -5,19 +5,19 @@ describe GcodeVm::DSL do
   it "builds move" do
     dsl = GcodeVm::DSL.new
     dsl.move(X: 10.0, Y: 20.0)
-    dsl.commands[0].must_equal GcodeVm::Commands::Move.new(axes: { X: 10.0, Y: 20.0 })
+    _(dsl.commands[0]).must_equal GcodeVm::Commands::Move.new(axes: { X: 10.0, Y: 20.0 })
   end
 
   it "builds arc" do
     dsl = GcodeVm::DSL.new
     dsl.arc(ccw: false, X: 10.0, Y: 20.0, I: 1.0, J: 2.0)
-    dsl.commands[0].must_equal GcodeVm::Commands::Arc.new(axes: { X: 10.0, Y: 20.0, I: 1.0, J: 2.0 }, ccw: false)
+    _(dsl.commands[0]).must_equal GcodeVm::Commands::Arc.new(axes: { X: 10.0, Y: 20.0, I: 1.0, J: 2.0 }, ccw: false)
   end
 
   it "builds set position" do
     dsl = GcodeVm::DSL.new
     dsl.set_position(X: 10.0, Y: 20.0)
-    dsl.commands[0].must_equal GcodeVm::Commands::SetPosition.new(axes: { X: 10.0, Y: 20.0 })
+    _(dsl.commands[0]).must_equal GcodeVm::Commands::SetPosition.new(axes: { X: 10.0, Y: 20.0 })
   end
 
   it "has a nice DSL for G-code" do
@@ -55,7 +55,7 @@ describe GcodeVm::DSL do
       absolute
     end
 
-    dsl.commands.map {|c| "#{c.to_gcode}\n" }.join.must_equal <<-EOS
+    _(dsl.commands.map {|c| "#{c.to_gcode}\n" }.join).must_equal <<-EOS
 G28 X Y
 G90
 M109 S220

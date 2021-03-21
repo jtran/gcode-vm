@@ -14,23 +14,23 @@ describe GcodeVm::TransformSpec do
     filename = Pathname.new('test/data/simple_transform.yml').expand_path(PROJECT_ROOT).to_s
     result = GcodeVm::TransformSpec.load_file(filename, container: container)
 
-    result.must_be_instance_of Array
-    result[0].must_be_instance_of GcodeVm::AxisScaleTransformer
-    result[0].multiplier.must_equal 1.5
+    _(result).must_be_instance_of Array
+    _(result[0]).must_be_instance_of GcodeVm::AxisScaleTransformer
+    _(result[0].multiplier).must_equal 1.5
   end
 
   it "parses transform YAML from file" do
     filename = Pathname.new('test/data/simple_transform.yml').expand_path(PROJECT_ROOT).to_s
     result = GcodeVm::TransformSpec.parse(filename)
 
-    result.must_be_instance_of ActiveSupport::HashWithIndifferentAccess
-    result[:transform].must_be_instance_of Array
+    _(result).must_be_instance_of ActiveSupport::HashWithIndifferentAccess
+    _(result[:transform]).must_be_instance_of Array
   end
 
   it "loads transform from string" do
     ts = GcodeVm::TransformSpec.load(['identity'], container: container)
-    ts[0].must_be_instance_of GcodeVm::IdentityTransformer
-    ts.size.must_equal 1
+    _(ts[0]).must_be_instance_of GcodeVm::IdentityTransformer
+    _(ts.size).must_equal 1
   end
 
   it "loads transform from hash" do
@@ -38,9 +38,9 @@ describe GcodeVm::TransformSpec do
       name: 'split',
       pattern: 'foo',
     ], container: container)
-    ts[0].must_be_instance_of GcodeVm::SplitEnumerator
-    ts[0].pattern.must_equal 'foo'
-    ts.size.must_equal 1
+    _(ts[0]).must_be_instance_of GcodeVm::SplitEnumerator
+    _(ts[0].pattern).must_equal 'foo'
+    _(ts.size).must_equal 1
   end
 
   it "loads transform from hash when there's a comment field" do
@@ -49,9 +49,9 @@ describe GcodeVm::TransformSpec do
       pattern: 'foo',
       comment: 'bar',
     ], container: container)
-    ts[0].must_be_instance_of GcodeVm::SplitEnumerator
-    ts[0].pattern.must_equal 'foo'
-    ts.size.must_equal 1
+    _(ts[0]).must_be_instance_of GcodeVm::SplitEnumerator
+    _(ts[0].pattern).must_equal 'foo'
+    _(ts.size).must_equal 1
   end
 
   it "disallows load of unsafe transform and calls callback" do
@@ -66,7 +66,7 @@ describe GcodeVm::TransformSpec do
 
     GcodeVm::TransformSpec.load(spec, unsafe_error: fn, container: container)
 
-    called.must_equal true
+    _(called).must_equal true
   end
 
   it "loads transform with if condition" do
@@ -74,10 +74,10 @@ describe GcodeVm::TransformSpec do
       name: 'chomp',
       if: '/[a-z]+/',
     }, container: container)
-    ts[0].must_be_instance_of GcodeVm::ConditionalTransformer
-    ts[0].condition.must_be_instance_of GcodeVm::MatchCondition
-    ts[0].condition.pattern.must_equal(/[a-z]+/)
-    ts[0].transformer.must_be_instance_of GcodeVm::ChompTransformer
+    _(ts[0]).must_be_instance_of GcodeVm::ConditionalTransformer
+    _(ts[0].condition).must_be_instance_of GcodeVm::MatchCondition
+    _(ts[0].condition.pattern).must_equal(/[a-z]+/)
+    _(ts[0].transformer).must_be_instance_of GcodeVm::ChompTransformer
   end
 
   it "loads transform with unless condition" do
@@ -85,11 +85,11 @@ describe GcodeVm::TransformSpec do
       name: 'chomp',
       unless: '/[a-z]+/',
     }, container: container)
-    ts[0].must_be_instance_of GcodeVm::ConditionalTransformer
-    ts[0].condition.must_be_instance_of GcodeVm::NotCondition
-    ts[0].condition.condition.must_be_instance_of GcodeVm::MatchCondition
-    ts[0].condition.condition.pattern.must_equal(/[a-z]+/)
-    ts[0].transformer.must_be_instance_of GcodeVm::ChompTransformer
+    _(ts[0]).must_be_instance_of GcodeVm::ConditionalTransformer
+    _(ts[0].condition).must_be_instance_of GcodeVm::NotCondition
+    _(ts[0].condition.condition).must_be_instance_of GcodeVm::MatchCondition
+    _(ts[0].condition.condition.pattern).must_equal(/[a-z]+/)
+    _(ts[0].transformer).must_be_instance_of GcodeVm::ChompTransformer
   end
 
   it "loads transform with both if and unless conditions and ANDs them together" do
@@ -98,17 +98,17 @@ describe GcodeVm::TransformSpec do
       if: '/[a-z]+/',
       unless: '/[aeiou]+/',
     }, container: container)
-    ts[0].must_be_instance_of GcodeVm::ConditionalTransformer
-    ts[0].transformer.must_be_instance_of GcodeVm::ChompTransformer
+    _(ts[0]).must_be_instance_of GcodeVm::ConditionalTransformer
+    _(ts[0].transformer).must_be_instance_of GcodeVm::ChompTransformer
     and_cond = ts[0].condition
-    and_cond.must_be_instance_of GcodeVm::AndCondition
+    _(and_cond).must_be_instance_of GcodeVm::AndCondition
     if_cond = and_cond.conditions[0]
-    if_cond.pattern.must_equal(/[a-z]+/)
+    _(if_cond.pattern).must_equal(/[a-z]+/)
     not_cond = and_cond.conditions[1]
-    not_cond.must_be_instance_of GcodeVm::NotCondition
+    _(not_cond).must_be_instance_of GcodeVm::NotCondition
     unless_cond = not_cond.condition
-    unless_cond.must_be_instance_of GcodeVm::MatchCondition
-    unless_cond.pattern.must_equal(/[aeiou]+/)
+    _(unless_cond).must_be_instance_of GcodeVm::MatchCondition
+    _(unless_cond.pattern).must_equal(/[aeiou]+/)
   end
 
   it "loads transform with an if condition that's a range" do
@@ -116,12 +116,12 @@ describe GcodeVm::TransformSpec do
       name: 'chomp',
       if: '/begin/ ... /end/',
     }, container: container)
-    ts[0].must_be_instance_of GcodeVm::ConditionalTransformer
-    ts[0].transformer.must_be_instance_of GcodeVm::ChompTransformer
+    _(ts[0]).must_be_instance_of GcodeVm::ConditionalTransformer
+    _(ts[0].transformer).must_be_instance_of GcodeVm::ChompTransformer
     range_cond = ts[0].condition
-    range_cond.must_be_instance_of GcodeVm::RangeCondition
-    range_cond.start_condition.pattern.must_equal(/begin/)
-    range_cond.end_condition.pattern.must_equal(/end/)
+    _(range_cond).must_be_instance_of GcodeVm::RangeCondition
+    _(range_cond.start_condition.pattern).must_equal(/begin/)
+    _(range_cond.end_condition.pattern).must_equal(/end/)
   end
 
   it "loads extrusion multiplier transform with an if condition" do
@@ -130,10 +130,10 @@ describe GcodeVm::TransformSpec do
       axis: 'E',
       if: '/foo/',
     }, container: container)
-    ts[0].must_be_instance_of GcodeVm::ExtrusionMultiplierEnumerator
+    _(ts[0]).must_be_instance_of GcodeVm::ExtrusionMultiplierEnumerator
     cond = ts[0].condition
-    cond.must_be_instance_of GcodeVm::MatchCondition
-    cond.pattern.must_equal(/foo/)
+    _(cond).must_be_instance_of GcodeVm::MatchCondition
+    _(cond.pattern).must_equal(/foo/)
   end
 
   it "loads reject transform with an if condition" do
@@ -141,10 +141,10 @@ describe GcodeVm::TransformSpec do
       name: 'reject',
       if: '/foo/',
     }, container: container)
-    ts[0].must_be_instance_of GcodeVm::RejectEnumerator
+    _(ts[0]).must_be_instance_of GcodeVm::RejectEnumerator
     cond = ts[0].condition
-    cond.must_be_instance_of GcodeVm::MatchCondition
-    cond.pattern.must_equal(/foo/)
+    _(cond).must_be_instance_of GcodeVm::MatchCondition
+    _(cond.pattern).must_equal(/foo/)
   end
 
   it "loads transform with UI metadata" do
@@ -154,7 +154,7 @@ describe GcodeVm::TransformSpec do
         foo: 'bar',
       },
     }, container: container)
-    ts[0].must_be_instance_of GcodeVm::ChompTransformer
+    _(ts[0]).must_be_instance_of GcodeVm::ChompTransformer
   end
 
   describe "when loading a transform with a dependency" do
@@ -169,11 +169,11 @@ describe GcodeVm::TransformSpec do
       }, container: container)
 
       # At this point, the Evaluator should have been instantiated and cached.
-      container.cached?(:evaluator).must_equal true
+      _(container.cached?(:evaluator)).must_equal true
 
-      ts[0].evaluator.must_be_instance_of GcodeVm::Evaluator
-      ts[0].evaluator.axes.must_be_same_as GcodeVm::Machine::AEROTECH_AXES
-      ts[0].evaluator.must_be_same_as container.lookup(:evaluator)
+      _(ts[0].evaluator).must_be_instance_of GcodeVm::Evaluator
+      _(ts[0].evaluator.axes).must_be_same_as GcodeVm::Machine::AEROTECH_AXES
+      _(ts[0].evaluator).must_be_same_as container.lookup(:evaluator)
     end
 
     it "loads Ruby class from file and injects container" do
@@ -182,16 +182,16 @@ describe GcodeVm::TransformSpec do
                                                 container: container,
                                                 allow_unsafe: true)
 
-      result.must_be_instance_of Array
-      result[0].must_be_instance_of GcodeVm::EvalRubyTransformer
-      result[0].container.must_be_same_as container
+      _(result).must_be_instance_of Array
+      _(result[0]).must_be_instance_of GcodeVm::EvalRubyTransformer
+      _(result[0].container).must_be_same_as container
     end
 
     it "raises when a dependency is requested that hasn't been registered" do
       # Empty container.
       container = GcodeVm::Container.new
       # Don't register anything.
-      proc {
+      expect {
         GcodeVm::TransformSpec.load({
           name: 'extrusion_multiplier',
           axis: 'E',

@@ -6,15 +6,15 @@ describe GcodeVm::RangeCondition do
     c1 = GcodeVm::MatchCondition.new(pattern: /begin/)
     c2 = GcodeVm::MatchCondition.new(pattern: /end/)
     cond = GcodeVm::RangeCondition.new(start_condition: c1, end_condition: c2)
-    cond.call('foo').must_equal false
-    cond.call('begin').must_equal true
-    cond.call('bar').must_equal true
-    cond.call('baz').must_equal true
-    cond.call('end').must_equal true
-    cond.call('between').must_equal false
-    cond.call('begin').must_equal true
-    cond.call('end').must_equal true
-    cond.call('after').must_equal false
+    _(cond.call('foo')).must_equal false
+    _(cond.call('begin')).must_equal true
+    _(cond.call('bar')).must_equal true
+    _(cond.call('baz')).must_equal true
+    _(cond.call('end')).must_equal true
+    _(cond.call('between')).must_equal false
+    _(cond.call('begin')).must_equal true
+    _(cond.call('end')).must_equal true
+    _(cond.call('after')).must_equal false
   end
 
 end

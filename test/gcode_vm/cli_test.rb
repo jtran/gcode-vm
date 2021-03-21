@@ -12,7 +12,7 @@ describe GcodeVm::Cli do
 
     cli.main(read_stdin: false, stdin_enum: input.each_line, sink_io: output)
 
-    output.string.must_equal "G1 X1 F1500.0\nG1 Y2\n"
+    _(output.string).must_equal "G1 X1 F1500.0\nG1 Y2\n"
   end
 
   it "transforms using evaluator dependency" do
@@ -24,7 +24,7 @@ describe GcodeVm::Cli do
 
     cli.main(read_stdin: false, stdin_enum: input.each_line, sink_io: output)
 
-    output.string.must_equal "G1 b2.0\nG1 b4.0\n"
+    _(output.string).must_equal "G1 b2.0\nG1 b4.0\n"
   end
 
   it "outputs extra new line when reaching end of input in interactive mode" do
@@ -36,7 +36,7 @@ describe GcodeVm::Cli do
 
     cli.main(read_stdin: false, stdin_enum: input.each_line, sink_io: output)
 
-    output.string.must_equal "G1 X1 F1500.0\nG1 Y2\n\n"
+    _(output.string).must_equal "G1 X1 F1500.0\nG1 Y2\n\n"
   end
 
   it "stops transforming after reaching exit in interactive mode" do
@@ -48,7 +48,7 @@ describe GcodeVm::Cli do
 
     cli.main(read_stdin: false, stdin_enum: input.each_line, sink_io: output)
 
-    output.string.must_equal "G1 X1 F1500.0\n"
+    _(output.string).must_equal "G1 X1 F1500.0\n"
   end
 
   it "prints transform list" do
@@ -59,8 +59,8 @@ describe GcodeVm::Cli do
 
     cli.main(read_stdin: false, stdin_enum: input.each_line, sink_io: output)
 
-    output.string.must_match /axis_translate/
-    output.string.must_match /axis_scale/
+    _(output.string).must_match /axis_translate/
+    _(output.string).must_match /axis_scale/
   end
 
 end

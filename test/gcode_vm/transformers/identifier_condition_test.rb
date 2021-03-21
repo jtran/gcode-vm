@@ -7,9 +7,9 @@ describe GcodeVm::IdentifierCondition do
       id_cond = GcodeVm::IdentifierCondition.new(id: 'changing_to')
       match_cond = GcodeVm::MatchCondition.new(pattern: /foo/)
       c = id_cond.call(match_cond)
-      c.must_be_instance_of GcodeVm::TransitionCondition
-      c.transition.must_equal :to_truthy
-      c.previous_value.must_equal false
+      _(c).must_be_instance_of GcodeVm::TransitionCondition
+      _(c.transition).must_equal :to_truthy
+      _(c.previous_value).must_equal false
     end
 
     it "returns the same transition condition instance each time it's called" do
@@ -17,7 +17,7 @@ describe GcodeVm::IdentifierCondition do
       match_cond = GcodeVm::MatchCondition.new(pattern: /foo/)
       c1 = id_cond.call(match_cond)
       c2 = id_cond.call(match_cond)
-      c1.must_be_same_as c2
+      _(c1).must_be_same_as c2
     end
   end
 
@@ -26,9 +26,9 @@ describe GcodeVm::IdentifierCondition do
       id_cond = GcodeVm::IdentifierCondition.new(id: 'changing_from')
       match_cond = GcodeVm::MatchCondition.new(pattern: /foo/)
       c = id_cond.call(match_cond)
-      c.must_be_instance_of GcodeVm::TransitionCondition
-      c.transition.must_equal :to_falsey
-      c.previous_value.must_equal true
+      _(c).must_be_instance_of GcodeVm::TransitionCondition
+      _(c.transition).must_equal :to_falsey
+      _(c.previous_value).must_equal true
     end
 
     it "returns the same transition condition instance each time it's called" do
@@ -36,7 +36,7 @@ describe GcodeVm::IdentifierCondition do
       match_cond = GcodeVm::MatchCondition.new(pattern: /foo/)
       c1 = id_cond.call(match_cond)
       c2 = id_cond.call(match_cond)
-      c1.must_be_same_as c2
+      _(c1).must_be_same_as c2
     end
   end
 
@@ -45,9 +45,9 @@ describe GcodeVm::IdentifierCondition do
       id_cond = GcodeVm::IdentifierCondition.new(id: 'not')
       match_cond = GcodeVm::MatchCondition.new(pattern: /foo/)
       c = id_cond.call(match_cond)
-      c.must_be_instance_of GcodeVm::NotCondition
-      c.condition.must_be_same_as match_cond
-      id_cond.call(match_cond).must_be_same_as c
+      _(c).must_be_instance_of GcodeVm::NotCondition
+      _(c.condition).must_be_same_as match_cond
+      _(id_cond.call(match_cond)).must_be_same_as c
     end
   end
 

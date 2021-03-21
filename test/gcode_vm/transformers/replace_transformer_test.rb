@@ -4,23 +4,23 @@ describe GcodeVm::ReplaceTransformer do
 
   it "replaces regexp with string" do
     t = GcodeVm::ReplaceTransformer.new(pattern: /,\s*/, with: '|')
-    t.call('a, b,   c').must_equal 'a|b|c'
+    _(t.call('a, b,   c')).must_equal 'a|b|c'
   end
 
   it "passes through objects that aren't strings" do
     t = GcodeVm::ReplaceTransformer.new(pattern: /,\s*/, with: '|')
-    t.call(42).must_equal 42
-    t.call(nil).must_be_nil
+    _(t.call(42)).must_equal 42
+    _(t.call(nil)).must_be_nil
   end
 
   it "disallows multiline replacement" do
-    proc {
+    expect {
       GcodeVm::ReplaceTransformer.new(pattern: /foo/, with: "first\nsecond")
     }.must_raise(ArgumentError)
   end
 
   it "disallows multiline replacement when using Windows line endings" do
-    proc {
+    expect {
       GcodeVm::ReplaceTransformer.new(pattern: /foo/, with: "first\r\nsecond")
     }.must_raise(ArgumentError)
   end
@@ -29,7 +29,7 @@ describe GcodeVm::ReplaceTransformer do
     t = GcodeVm::ReplaceTransformer.new(pattern: /foo/,
                                         with: "first\nsecond",
                                         multiline_output: true)
-    t.call('foobar').must_equal "first\nsecondbar"
+    _(t.call('foobar')).must_equal "first\nsecondbar"
   end
 
 end

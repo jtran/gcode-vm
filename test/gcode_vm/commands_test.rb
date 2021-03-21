@@ -7,7 +7,7 @@ describe GcodeVm::Commands do
     cmd.axes['X'] = 1.5
     cmd.gcode = 'G1 X1.5'
 
-    YAML.load(YAML.dump(cmd)).must_equal cmd
+    _(YAML.load(YAML.dump(cmd))).must_equal cmd
   end
 
   it "parses from YAML" do
@@ -22,7 +22,7 @@ gcode: G1 X90.201 b49.532813
     EOS
 
     obj = YAML.load(s)
-    obj.must_be_instance_of GcodeVm::Commands::Move
+    _(obj).must_be_instance_of GcodeVm::Commands::Move
   end
 
   it "serializes to YAML" do
@@ -31,7 +31,7 @@ gcode: G1 X90.201 b49.532813
     cmd.gcode = 'G1 X1.5'
 
     yaml = YAML.dump(cmd)
-    yaml.must_equal <<-EOS
+    _(yaml).must_equal <<-EOS
 --- !ruby/object:GcodeVm::Commands::Move
 axes:
   X: 1.5
@@ -47,7 +47,7 @@ travel: false
     cmd.gcode = 'N23 G1 X1.5'
     cmd.line_number = 23
 
-    YAML.load(YAML.dump(cmd)).must_equal cmd
+    _(YAML.load(YAML.dump(cmd))).must_equal cmd
   end
 
   it "serializes to YAML with line number" do
@@ -57,7 +57,7 @@ travel: false
     cmd.line_number = 23
 
     yaml = YAML.dump(cmd)
-    yaml.must_equal <<-EOS
+    _(yaml).must_equal <<-EOS
 --- !ruby/object:GcodeVm::Commands::Move
 axes:
   X: 1.5

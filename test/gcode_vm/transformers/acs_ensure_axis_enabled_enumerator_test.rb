@@ -36,15 +36,15 @@ describe GcodeVm::AcsEnsureAxisEnabledEnumerator do
     it "waits for enabling single axis" do
       enum.source_enum = ['one', 'two', 'ENABLE X', 'three'].each
       result = enum.to_a
-      result.must_equal ['one', 'two', 'ENABLE X', 'three']
-      mock_acs_socket.string_io.string.must_equal "?MST(X).#ENABLED\n"
+      _(result).must_equal ['one', 'two', 'ENABLE X', 'three']
+      _(mock_acs_socket.string_io.string).must_equal "?MST(X).#ENABLED\n"
     end
 
     it "waits for enabling multiple axes" do
       enum.source_enum = ['one', 'two', 'ENABLE (X,Y, u)', 'three'].each
       result = enum.to_a
-      result.must_equal ['one', 'two', 'ENABLE (X,Y, u)', 'three']
-      mock_acs_socket.string_io.string.must_equal <<-EOS
+      _(result).must_equal ['one', 'two', 'ENABLE (X,Y, u)', 'three']
+      _(mock_acs_socket.string_io.string).must_equal <<-EOS
 ?MST(X).#ENABLED
 ?MST(Y).#ENABLED
 ?MST(u).#ENABLED
@@ -61,15 +61,15 @@ describe GcodeVm::AcsEnsureAxisEnabledEnumerator do
     it "waits for enabling single axis" do
       enum.source_enum = ['one', 'two', 'ENABLE X', 'three'].each
       result = enum.to_a
-      result.must_equal ['one', 'two', 'ENABLE X', 'three']
-      mock_acs_socket.string_io.string.must_equal "?MST(X).#ENABLED\n?MST(X).#ENABLED\n?MST(X).#ENABLED\n"
+      _(result).must_equal ['one', 'two', 'ENABLE X', 'three']
+      _(mock_acs_socket.string_io.string).must_equal "?MST(X).#ENABLED\n?MST(X).#ENABLED\n?MST(X).#ENABLED\n"
     end
 
     it "waits for enabling multiple axes" do
       enum.source_enum = ['one', 'two', 'ENABLE (X,Y, u)', 'three'].each
       result = enum.to_a
-      result.must_equal ['one', 'two', 'ENABLE (X,Y, u)', 'three']
-      mock_acs_socket.string_io.string.must_equal <<-EOS
+      _(result).must_equal ['one', 'two', 'ENABLE (X,Y, u)', 'three']
+      _(mock_acs_socket.string_io.string).must_equal <<-EOS
 ?MST(X).#ENABLED
 ?MST(X).#ENABLED
 ?MST(X).#ENABLED
@@ -91,7 +91,7 @@ describe GcodeVm::AcsEnsureAxisEnabledEnumerator do
       begin
         enum.to_a
       rescue => e
-        e.message.must_equal "There was an error querying the status of a motor when trying to enable it: query=\"?MST(X).#ENABLED\" resp=\"?1234\""
+        _(e.message).must_equal "There was an error querying the status of a motor when trying to enable it: query=\"?MST(X).#ENABLED\" resp=\"?1234\""
       else
         fail "I epxected the enumerator to raise an error"
       end

@@ -6,7 +6,7 @@ describe GcodeVm::EachEnumerator do
     enum = GcodeVm::EachEnumerator.new
     enum.source_enum = ['one', 'two', 'three'].each
     enum.to_a
-    enum.index.must_equal 3
+    _(enum.index).must_equal 3
   end
 
   it "calls progress block with values and indices" do
@@ -18,8 +18,8 @@ describe GcodeVm::EachEnumerator do
     })
     enum.source_enum = ['one', 'two', 'three'].each
     enum.to_a
-    values.must_equal ['one', 'two', 'three']
-    indices.must_equal [0, 1, 2]
+    _(values).must_equal ['one', 'two', 'three']
+    _(indices).must_equal [0, 1, 2]
   end
 
   it "calls block with values and indices when instantiated with a block" do
@@ -31,8 +31,8 @@ describe GcodeVm::EachEnumerator do
     }
     enum.source_enum = ['one', 'two', 'three'].each
     enum.to_a
-    values.must_equal ['one', 'two', 'three']
-    indices.must_equal [0, 1, 2]
+    _(values).must_equal ['one', 'two', 'three']
+    _(indices).must_equal [0, 1, 2]
   end
 
   it "calls complete block with exception and index" do
@@ -44,8 +44,8 @@ describe GcodeVm::EachEnumerator do
     })
     enum.source_enum = ['one', 'two', 'three'].each
     enum.to_a
-    error.must_be_instance_of StopIteration
-    index.must_equal 3
+    _(error).must_be_instance_of StopIteration
+    _(index).must_equal 3
   end
 
   it "calls block after pulling value from source and before transforming" do
@@ -56,12 +56,12 @@ describe GcodeVm::EachEnumerator do
     })
     enum.source_enum = ['one', 'two', 'three'].each
     enum = enum.pipe(&:upcase)
-    enum.to_a.must_equal ['ONE', 'TWO', 'THREE']
-    values.must_equal ['one', 'two', 'three']
+    _(enum.to_a).must_equal ['ONE', 'TWO', 'THREE']
+    _(values).must_equal ['one', 'two', 'three']
   end
 
   it "disallows instantiating with both on_progress and a block" do
-    proc {
+    expect {
       GcodeVm::EachEnumerator.new(on_progress: proc {|val, i| }) {|val,i| }
     }.must_raise ArgumentError
   end

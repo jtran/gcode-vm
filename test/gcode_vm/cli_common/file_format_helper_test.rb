@@ -5,14 +5,14 @@ describe GcodeVm::FileFormatHelper do
 
   it "instantiates G-code toolpath file based on file extension" do
     tp_file = GcodeVm::FileFormatHelper.toolpath_file('foo.gcode', nil)
-    tp_file.must_be_instance_of GcodeVm::GcodeToolpathFile
-    tp_file.filename.must_equal 'foo.gcode'
+    _(tp_file).must_be_instance_of GcodeVm::GcodeToolpathFile
+    _(tp_file.filename).must_equal 'foo.gcode'
   end
 
   it "instantiates G-code toolpath file based on explicit format" do
     tp_file = GcodeVm::FileFormatHelper.toolpath_file('foo.toolpath', 'gcode')
-    tp_file.must_be_instance_of GcodeVm::GcodeToolpathFile
-    tp_file.filename.must_equal 'foo.toolpath'
+    _(tp_file).must_be_instance_of GcodeVm::GcodeToolpathFile
+    _(tp_file.filename).must_equal 'foo.toolpath'
   end
 
   it "instantiates custom toolpath file based on file extension" do
@@ -23,8 +23,8 @@ describe GcodeVm::FileFormatHelper do
       42
     end
     tp_file = GcodeVm::FileFormatHelper.toolpath_file('foo.custom', nil)
-    tp_file.must_equal 42
-    called_with.must_equal 'foo.custom'
+    _(tp_file).must_equal 42
+    _(called_with).must_equal 'foo.custom'
   end
 
   it "instantiates custom toolpath file based on explicit format" do
@@ -35,8 +35,8 @@ describe GcodeVm::FileFormatHelper do
       42
     end
     tp_file = GcodeVm::FileFormatHelper.toolpath_file('foo.gcode', :my_custom_format)
-    tp_file.must_equal 42
-    called_with.must_equal 'foo.gcode'
+    _(tp_file).must_equal 42
+    _(called_with).must_equal 'foo.gcode'
   end
 
   it "raises if given an unknown toolpath format when trying to instantiate file" do
@@ -46,8 +46,8 @@ describe GcodeVm::FileFormatHelper do
   end
 
   it "defaults to gcode if no toolpath format can be inferred" do
-    GcodeVm::FileFormatHelper.canonical_toolpath_format('no-extension', nil).must_equal :gcode
-    GcodeVm::FileFormatHelper.canonical_toolpath_format(nil, nil).must_equal :gcode
+    _(GcodeVm::FileFormatHelper.canonical_toolpath_format('no-extension', nil)).must_equal :gcode
+    _(GcodeVm::FileFormatHelper.canonical_toolpath_format(nil, nil)).must_equal :gcode
   end
 
 end
