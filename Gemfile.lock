@@ -28,7 +28,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  bundler (~> 2.0)
+  bundler (~> 2.1)
   gcode-vm!
   minitest (~> 5.14.4)
   rake (~> 13.0)
