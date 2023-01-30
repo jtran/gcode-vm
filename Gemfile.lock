@@ -2,27 +2,25 @@ PATH
   remote: .
   specs:
     gcode-vm (1.0.1)
-      activesupport (>= 5.1, < 7)
+      activesupport (>= 5.1, < 8)
       parslet (>= 1.8, < 3)
 
 GEM
   remote: https://rubygems.org/
   specs:
-    activesupport (6.1.4.1)
+    activesupport (7.0.4.2)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (>= 1.6, < 2)
       minitest (>= 5.1)
       tzinfo (~> 2.0)
-      zeitwerk (~> 2.3)
-    concurrent-ruby (1.1.9)
-    i18n (1.8.11)
+    concurrent-ruby (1.2.0)
+    i18n (1.12.0)
       concurrent-ruby (~> 1.0)
     minitest (5.14.4)
     parslet (2.0.0)
     rake (13.0.3)
-    tzinfo (2.0.4)
+    tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
-    zeitwerk (2.5.1)
 
 PLATFORMS
   ruby
