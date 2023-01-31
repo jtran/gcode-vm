@@ -19,6 +19,11 @@ module GcodeVm
     end
 
     def call(line)
+      if ! line.respond_to?(:to_str)
+        return line
+      end
+      line = line.to_str
+
       if line !~ /\A\s*(?:N\d+\s+)?G(?:0|1|2|3)\s/ || line =~ /\b#{@axis}[\d\.\+\-e]/
         return line
       end
