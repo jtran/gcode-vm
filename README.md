@@ -4,7 +4,7 @@ A G-code virtual machine and post-processing DSL.
 
 ## Requirements
 
-- Ruby v2.5 to v3.0
+- Ruby v2.5 to v3.1
 
 ## Installation
 

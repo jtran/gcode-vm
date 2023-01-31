@@ -39,9 +39,9 @@ module GcodeVm
       if filename
         yaml = File.read(filename)
         if allow_unsafe
-          transform_doc = YAML.load(yaml, filename)
+          transform_doc = yaml_load(yaml, filename)
         else
-          transform_doc = YAML.safe_load(yaml, [], [], false, filename)
+          transform_doc = yaml_safe_load(yaml, filename)
         end
       else
         # If no filename was given, return an empty doc.
@@ -268,6 +268,26 @@ module GcodeVm
       method.parameters.any? {|t, name|
         name == :condition
       }
+    end
+
+    if RUBY_VERSION < '3.1'
+      def yaml_load(yaml, filename)
+        YAML.load(yaml, filename)
+      end
+    else
+      def yaml_load(yaml, filename)
+        YAML.load(yaml, filename: filename)
+      end
+    end
+
+    if RUBY_VERSION < '3.1'
+      def yaml_safe_load(yaml, filename)
+        YAML.safe_load(yaml, [], [], false, filename)
+      end
+    else
+      def yaml_safe_load(yaml, filename)
+        YAML.safe_load(yaml, filename: filename)
+      end
     end
 
   end

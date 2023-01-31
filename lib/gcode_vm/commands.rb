@@ -16,6 +16,21 @@ require_relative './commands/unknown'
 module GcodeVm
   module Commands
 
+    def self.yaml_safe_commands()
+      [
+        Absolute,
+        Arc,
+        Comment,
+        Dwell,
+        Home,
+        Incremental,
+        Literal,
+        Move,
+        SetPosition,
+        Unknown,
+      ]
+    end
+
     # Convenience method for parsing when using the default parser.
     def self.parse(gcode_line)
       CommandParser.new.parse_line(gcode_line)

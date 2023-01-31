@@ -2,12 +2,22 @@ require 'test_helper'
 
 describe GcodeVm::Commands do
 
+  if RUBY_VERSION < '3.1'
+    def yaml_load(s)
+      YAML.load(s)
+    end
+  else
+    def yaml_load(s)
+      YAML.load(s, permitted_classes: GcodeVm::Commands.yaml_safe_commands)
+    end
+  end
+
   it "round-trips to YAML" do
     cmd = GcodeVm::Commands::Move.new
     cmd.axes['X'] = 1.5
     cmd.gcode = 'G1 X1.5'
 
-    _(YAML.load(YAML.dump(cmd))).must_equal cmd
+    _(yaml_load(YAML.dump(cmd))).must_equal cmd
   end
 
   it "parses from YAML" do
@@ -21,7 +31,7 @@ axes:
 gcode: G1 X90.201 b49.532813
     EOS
 
-    obj = YAML.load(s)
+    obj = yaml_load(s)
     _(obj).must_be_instance_of GcodeVm::Commands::Move
   end
 
@@ -47,7 +57,7 @@ travel: false
     cmd.gcode = 'N23 G1 X1.5'
     cmd.line_number = 23
 
-    _(YAML.load(YAML.dump(cmd))).must_equal cmd
+    _(yaml_load(YAML.dump(cmd))).must_equal cmd
   end
 
   it "serializes to YAML with line number" do
