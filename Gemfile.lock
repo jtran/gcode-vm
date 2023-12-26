@@ -29,7 +29,7 @@ GEM
     minitest (5.20.0)
     mutex_m (0.2.0)
     parslet (2.0.0)
-    rake (13.0.3)
+    rake (13.0.6)
     ruby2_keywords (0.0.5)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
